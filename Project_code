@@ -1,0 +1,30 @@
+-- Question: Relationship between Avg Median Household Income by City and average restaurent rating 
+use yelp;
+
+-- make income table
+CREATE TABLE income
+(
+    city varchar(100),
+    income int
+);
+SET GLOBAL LOCAL_INFILE=TRUE;
+SHOW GLOBAL VARIABLES LIKE 'LOCAL_INFILE';
+
+-- load income data into table
+LOAD DATA LOCAL INFILE '/Users/aksha/Downloads/Pennsylvania Median Household Income by City.csv'
+INTO TABLE yelp.income
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+IGNORE 1 ROWS
+(city,income);
+
+-- Find average rating by city in a Particular State
+SELECT b.city, b.state, AVG(r.stars) AS avg_stars, income.income
+FROM business b
+INNER JOIN
+review_notext r ON b.business_id = r.business_id
+INNER JOIN
+income ON b.city = income.city
+WHERE state = 'PA' and year(date) = '2017'
+GROUP BY city
+ORDER by city;
