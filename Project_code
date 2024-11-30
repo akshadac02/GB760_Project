@@ -25,6 +25,28 @@ INNER JOIN
 review_notext r ON b.business_id = r.business_id
 INNER JOIN
 income ON b.city = income.city
-WHERE state = 'PA' and year(date) = '2017'
+WHERE state = 'PA'
+GROUP BY city
+ORDER by city;
+
+-- avg rating for income greater than $150000
+SELECT b.city, b.state, AVG(r.stars) AS avg_stars, income.income
+FROM business b
+INNER JOIN
+review_notext r ON b.business_id = r.business_id
+INNER JOIN
+income ON b.city = income.city
+WHERE state = 'PA' and income.income > '150000'
+GROUP BY city
+ORDER by city;
+
+-- avg rating for income less than $82000
+SELECT b.city, b.state, AVG(r.stars) AS avg_stars, income.income
+FROM business b
+INNER JOIN
+review_notext r ON b.business_id = r.business_id
+INNER JOIN
+income ON b.city = income.city
+WHERE state = 'PA' and income.income < '82000'
 GROUP BY city
 ORDER by city;
